@@ -1,0 +1,58 @@
+可以通过在其他目录下安装R ，再将旧版本保留
+的library 目录下的文件拷贝至新版本library 目录下
+
+或卸载R ，把R 装到旧的目录下，最后使
+用如下命令更新：
+update.packages(checkBuilt=TRUE, ask=FALSE)
+or
+install.packages(.packages(all=TRUE))
+
+一、卸载掉现有的R软件（不要使用软件管家等进行强力清扫）；
+
+二、安装新版本的R软件，并将之前版本的library目录覆盖新装版本的对应目录；
+
+三、在新版本R中运行：
+
+update.packages(checkBuilt=TRUE, ask=FALSE);
+
+来更新library目录的包文件；
+
+四、大功告成，可以删除旧版本的所有文件了。
+
+如果像我一样也安装有RStudio这类集成编程环境，随着R的更新，RStudio是无需任何操作的。
+
+
+
+
+但是我发现它可以用在任何平台（Windows，Mac以及Linux）。
+
+installed.packages()函数用来保存一份已安装包的列表到R目录之外。然后利用这个列表和install.packges()函数来下载和安装最新的包到新安装的R中。下面是步骤：
+
+    如果有自定义的配置文件Rprofile.site，就把它保存到R之外。
+    启动当前版本的R，运行下面的命令
+
+1
+2
+
+	
+
+	oldip <- installed.packages()[ ,1]
+	save(oldip, file="path/installedPackages.Rdata")
+
+其中path是R的安装目录。
+
+    下载并安装最新版的R。
+    如果你保存了原来的Rprofile.site文件，把它复制到新的安装目录中。
+    启动新版的R，然后运行下面的命令
+
+    1
+    2
+    3
+    4
+
+    	
+
+    	load("path/installedPackages.Rdata")
+    	newip <- installed.packages()[,1]
+    	for(i in setdiff(oldip, newip))
+    		install.packages(i)
